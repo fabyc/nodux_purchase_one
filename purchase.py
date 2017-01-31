@@ -141,6 +141,13 @@ class Purchase(Workflow, ModelSQL, ModelView):
     def __setup__(cls):
         super(Purchase, cls).__setup__()
 
+        cls._transitions |= set((
+                ('draft', 'confirmed'),
+                ('draft', 'done'),
+                ('confirmed', 'done'),
+                ('done', 'anull'),
+                ))
+
         cls._buttons.update({
                 'wizard_purchase_payment': {
                     'invisible': Eval('state') == 'done',
@@ -301,6 +308,11 @@ class Purchase(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('anulled')
     def anull(cls, purchases):
+        for purchase in purchases:
+            for line in purchase.lines:
+                product = line.product.template
+                product.total = line.product.template.total - line.quantity
+                product.save()
         cls.write([p for p in purchases], {
                 'state': 'anulled',
                 })
@@ -309,12 +321,14 @@ class Purchase(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('confirmed')
     def confirm(cls, purchases):
-        print "Ingresa a este metodo"
         Company = Pool().get('company.company')
         company = Company(Transaction().context.get('company'))
-        print "COmpras ", purchases
         for purchase in purchases:
-            print "Esta aqui"
+            for line in purchase.lines:
+                product = line.product.template
+                product.total = line.product.template.total + line.quantity
+                product.save()
+
             if not purchase.reference:
                 reference = company.sequence_purchase
                 company.sequence_purchase = company.sequence_purchase + 1
@@ -325,6 +339,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
         cls.write([p for p in purchases], {
                 'state': 'confirmed',
                 })
+
 
     @classmethod
     @ModelView.button_action('nodux_purchase_one.wizard_purchase_payment')
@@ -687,7 +702,7 @@ class WizardPurchasePayment(Wizard):
         user = User(Transaction().user)
         limit = user.limit_purchase
 
-        purchases = Purchases.search_count([('state', '=', 'confirmed')])
+        purchases = Purchase.search_count([('state', '=', 'confirmed')])
         if purchases > limit and user.unlimited_purchase != True:
             self.raise_user_error(u'Ha excedido el límite de Compras, contacte con el Administrador de NODUX')
 
