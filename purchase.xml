@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!-- This file is part purchase_one module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+      <record model="ir.action.wizard" id="wizard_purchase_payment">
+          <field name="name">Pay</field>
+          <field name="wiz_name">purchase.payment</field>
+      </record>
+      <record model="ir.ui.view" id="purchase_payment_view_form">
+          <field name="model">purchase.payment.form</field>
+          <field name="type">form</field>
+          <field name="name">purchase_payment_form</field>
+      </record>
+
+        <!-- Views -->
+        <record model="ir.ui.view" id="purchase_line_view_tree">
+            <field name="model">purchase.line</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="name">purchase_line_tree</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_line_view_form">
+            <field name="model">purchase.line</field>
+            <field name="type">form</field>
+            <field name="name">purchase_line_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_pos_view_tree">
+            <field name="model">purchase.purchase</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="name">purchase_tree</field>
+        </record>
+        <record model="ir.ui.view" id="purchase_pos_view_form">
+            <field name="model">purchase.purchase</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="name">purchase_form</field>
+        </record>
+        <!-- Actions -->
+        <record model="ir.action.act_window" id="act_purchase_form">
+            <field name="name">Purchase</field>
+            <field name="res_model">purchase.purchase</field>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_purchase_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="purchase_pos_view_form"/>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_purchase_view_tree">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="purchase_pos_view_tree"/>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+
+        <record model="ir.action.act_window.domain" id="act_purchase_form_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain">[('state', '=', 'draft')]</field>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_purchase_form_domain_confirmed">
+            <field name="name">Confirmed</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'confirmed')]</field>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_purchase_form_domain_processing">
+            <field name="name">Done</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain">[('state', '=', 'done')]</field>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_purchase_form_domain_anulled">
+            <field name="name">Anulled</field>
+            <field name="sequence" eval="40"/>
+            <field name="domain">[('state', '=', 'anulled')]</field>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_purchase_form_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_purchase_form"/>
+        </record>
+
+        <menuitem name="Purchases" id="menu_purchase" sequence="5"/>
+        <menuitem name="Purchase" parent="menu_purchase" id="menu_purchase_pos"
+            sequence="1" icon="tryton-list" action="act_purchase_form"/>
+
+        <!-- Reports -->
+        <record model="ir.action.report" id="report_purchase_pos">
+            <field name="name">Purchase</field>
+            <field name="model">purchase.purchase</field>
+            <field name="report_name">purchase.purchase_pos</field>
+            <field name="report">nodux_purchase_one/purchase.odt</field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_purchase_pos_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="report_purchase_pos"/>
+        </record>
+        <!--REPORTE TOTAL DE VENTAS-->
+        <record model="ir.ui.view" id="print_purchase_report_start_view_form">
+            <field name="model">nodux_purchase_one.print_report_purchase.start</field>
+            <field name="type">form</field>
+            <field name="name">purchase_report_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wizard_purchases_report">
+            <field name="name">Reporte de Compras por fecha</field>
+            <field name="wiz_name">nodux_purchase_one.print_report_purchase</field>
+        </record>
+        <record model="ir.action.report" id="report_purchases">
+            <field name="name">Reporte de Compras</field>
+            <field name="model"></field>
+            <field name="report_name">nodux_purchase_one.report_purchases</field>
+            <field name="report">nodux_purchase_one/report_purchases.odt</field>
+        </record>
+        <menuitem parent="menu_purchase" action="wizard_purchases_report"
+            id="menu_purchase_report" icon="tryton-print"/>
+
+    </data>
+</tryton>

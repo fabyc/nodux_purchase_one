@@ -1,0 +1,607 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:company.company,sequence_purchase:"
+msgid "Sequence Purchase"
+msgstr "Secuencia Compra"
+
+msgctxt "field:nodux_purchase_one.print_report_purchase.start,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:nodux_purchase_one.print_report_purchase.start,date:"
+msgid "Sale Date"
+msgstr "Fecha de Venta"
+
+msgctxt "field:nodux_purchase_one.print_report_purchase.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:purchase.line,amount:"
+msgid "Amount"
+msgstr "Subtotal"
+
+msgctxt "field:purchase.line,amount_w_tax:"
+msgid "Amount with Tax"
+msgstr "Total con Impuestos"
+
+msgctxt "field:purchase.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:purchase.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:purchase.line,currency:"
+msgid "Currency"
+msgstr "Moneda"
+
+msgctxt "field:purchase.line,currency_digits:"
+msgid "Currency Digits"
+msgstr "Decimales Moneda"
+
+msgctxt "field:purchase.line,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:purchase.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:purchase.line,product:"
+msgid "Product"
+msgstr "Productos"
+
+msgctxt "field:purchase.line,product_uom_category:"
+msgid "Product Uom Category"
+msgstr "Categoría de UdM de producto"
+
+msgctxt "field:purchase.line,purchase:"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "field:purchase.line,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:purchase.line,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:purchase.line,sequence:"
+msgid "Sequence"
+msgstr "Secuencia"
+
+msgctxt "field:purchase.line,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:purchase.line,unit:"
+msgid "Unit"
+msgstr "Unidad"
+
+msgctxt "field:purchase.line,unit_digits:"
+msgid "Unit Digits"
+msgstr "Decimales de Unidad"
+
+msgctxt "field:purchase.line,unit_price:"
+msgid "Unit Price"
+msgstr "Precio Unitario"
+
+msgctxt "field:purchase.line,unit_price_w_tax:"
+msgid "Unit Price with Tax"
+msgstr "Precio unitario con impuestos"
+
+msgctxt "field:purchase.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha de Modificación"
+
+msgctxt "field:purchase.line,write_uid:"
+msgid "Write User"
+msgstr "Modificado por Usuario"
+
+msgctxt "field:purchase.payment.form,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:purchase.payment.form,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:purchase.payment.form,currency_digits:"
+msgid "Currency Digits"
+msgstr "Decimales Moneda"
+
+msgctxt "field:purchase.payment.form,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:purchase.payment.form,party:"
+msgid "Party"
+msgstr "Proveedor"
+
+msgctxt "field:purchase.payment.form,payment_amount:"
+msgid "Payment amount"
+msgstr "Total  a Pagar"
+
+msgctxt "field:purchase.payment.form,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:purchase.payment.form,write_date:"
+msgid "Write Date"
+msgstr "Fecha de Modificación"
+
+msgctxt "field:purchase.payment.form,write_uid:"
+msgid "Write User"
+msgstr "Modificado por Usuario"
+
+msgctxt "field:purchase.purchase,comment:"
+msgid "Comment"
+msgstr "Comentario"
+
+msgctxt "field:purchase.purchase,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:purchase.purchase,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:purchase.purchase,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:purchase.purchase,currency:"
+msgid "Currency"
+msgstr "Moneda"
+
+msgctxt "field:purchase.purchase,currency_digits:"
+msgid "Currency Digits"
+msgstr "Decimales Moneda"
+
+msgctxt "field:purchase.purchase,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:purchase.purchase,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:purchase.purchase,lines:"
+msgid "Lines"
+msgstr "Lineas"
+
+msgctxt "field:purchase.purchase,paid_amount:"
+msgid "Paid Amount"
+msgstr "Pagado"
+
+msgctxt "field:purchase.purchase,party:"
+msgid "Supplier"
+msgstr "Proveedor"
+
+msgctxt "field:purchase.purchase,party_lang:"
+msgid "Party Language"
+msgstr "Idioma del tercero"
+
+msgctxt "field:purchase.purchase,purchase_date:"
+msgid "Purchase Date"
+msgstr "Fecha de Compra"
+
+msgctxt "field:purchase.purchase,purchase_date_end:"
+msgid "Purchase Date End"
+msgstr "Fecha Vencimiento Compra"
+
+msgctxt "field:purchase.purchase,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:purchase.purchase,reference:"
+msgid "Reference"
+msgstr "Referencia"
+
+msgctxt "field:purchase.purchase,residual_amount:"
+msgid "Residual Amount"
+msgstr "Pendiente"
+
+msgctxt "field:purchase.purchase,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:purchase.purchase,tax_amount:"
+msgid "Tax"
+msgstr "Impuesto"
+
+msgctxt "field:purchase.purchase,tax_amount_cache:"
+msgid "Tax Cache"
+msgstr "Impuestos Precalculado"
+
+msgctxt "field:purchase.purchase,total_amount:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "field:purchase.purchase,total_amount_cache:"
+msgid "Total Tax"
+msgstr "Total Impuestos"
+
+msgctxt "field:purchase.purchase,untaxed_amount:"
+msgid "Untaxed"
+msgstr "Base Imponible"
+
+msgctxt "field:purchase.purchase,untaxed_amount_cache:"
+msgid "Untaxed Cache"
+msgstr "Base Sin Impuesto Precalculada"
+
+msgctxt "field:purchase.purchase,write_date:"
+msgid "Write Date"
+msgstr "Fecha de Modificación"
+
+msgctxt "field:purchase.purchase,write_uid:"
+msgid "Write User"
+msgstr "Modificado por Usuario"
+
+msgctxt "field:res.user,limit_purchase:"
+msgid "Purchase Limit"
+msgstr "Límite de Compras"
+
+msgctxt "field:res.user,unlimited_purchase:"
+msgid "Unlimited Purchase"
+msgstr "Compras Ilimitadas"
+
+msgctxt "model:ir.action,name:"
+msgid "POS Sales"
+msgstr "Compras"
+
+msgctxt "model:ir.action,name:act_purchase_form"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "model:ir.action,name:report_purchase_pos"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "model:ir.action,name:report_purchases"
+msgid "Reporte de Compras"
+msgstr ""
+
+msgctxt "model:ir.action,name:wizard_purchase_payment"
+msgid "Pay"
+msgstr "Pagar"
+
+msgctxt "model:ir.action,name:wizard_purchases_report"
+msgid "Reporte de Compras por fecha"
+msgstr ""
+
+msgctxt "model:ir.action.act_window.domain,name:"
+msgid "All"
+msgstr "Todo"
+
+msgctxt "model:ir.action.act_window.domain,name:act_purchase_form_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_purchase_form_domain_anulled"
+msgid "Anulled"
+msgstr "Anulada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_purchase_form_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_purchase_form_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_purchase_form_domain_processing"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "model:ir.ui.menu,name:"
+msgid "Sales"
+msgstr "Compras"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase"
+msgid "Purchases"
+msgstr "Compras"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase_pos"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase_report"
+msgid "Reporte de Compras por fecha"
+msgstr ""
+
+msgctxt "model:nodux_purchase_one.print_report_purchase.start,name:"
+msgid "Print Report Purchases Start"
+msgstr "Reporte de Compras"
+
+msgctxt "model:purchase.line,name:"
+msgid "Purchase Line"
+msgstr "Linea de Compra"
+
+msgctxt "model:purchase.payment.form,name:"
+msgid "Purchase Payment Form"
+msgstr "Formulario de Pago de Compra"
+
+msgctxt "model:purchase.purchase,name:"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "/"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "COMPRAS"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "Cliente"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "FECHA DE IMPRESIÓN:"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "Fecha"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "IVA"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "Monto total"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "Nodux Cía. Ltda."
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "RESUMEN"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "RESUMEN DE"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "SUBTOTAL 0%"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "SUBTOTAL 14%"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "SUBTOTALES"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "Subtotal"
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "[ PAG."
+msgstr ""
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "]"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "$"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "%:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid ","
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "/100"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "0"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "14"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "4"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid ":"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "C.I./RUC"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Cant."
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Código"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "DOLARES"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Descripción"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Dirección:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Fecha:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "IVA 1"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Nodux - (07) 2 560215 - 0999323367 - hola@nodux.e"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Nodux Cía. Ltda.: (07) 2 560215 – 0999323367 – hola@nodux.ec"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "P. Unit."
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Proveedor"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "SON:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Sistema"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Subt."
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Subtotal"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Subtotal:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "TOTAL:"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "Teléfono"
+msgstr ""
+
+msgctxt "odt:purchase.purchase_pos:"
+msgid "c"
+msgstr "c"
+
+msgctxt "selection:purchase.line,type:"
+msgid "Line"
+msgstr "Linea"
+
+msgctxt "selection:purchase.purchase,state:"
+msgid "Anulled"
+msgstr "Anulada"
+
+msgctxt "selection:purchase.purchase,state:"
+msgid "Confirmed"
+msgstr "Confirmado"
+
+msgctxt "selection:purchase.purchase,state:"
+msgid "Done"
+msgstr "Realizado"
+
+msgctxt "selection:purchase.purchase,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "view:company.company:"
+msgid "Sequence Purchase"
+msgstr "Secuencia Compra"
+
+msgctxt "view:nodux_purchase_one.print_report_purchase.start:"
+msgid "Print Salesman Report "
+msgstr "Imprimir Reporte de Compras"
+
+msgctxt "view:product.product:"
+msgid "Products"
+msgstr "Productos"
+
+msgctxt "view:purchase.line:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:purchase.line:"
+msgid "Lines"
+msgstr "Lineas"
+
+msgctxt "view:purchase.line:"
+msgid "Purchase Line"
+msgstr "Linea de Compra"
+
+msgctxt "view:purchase.payment.form:"
+msgid "Purchase Payment Form"
+msgstr "Formulario de Pago de Compra"
+
+msgctxt "view:purchase.purchase:"
+msgid "Anull"
+msgstr "Anular"
+
+msgctxt "view:purchase.purchase:"
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgctxt "view:purchase.purchase:"
+msgid "Other Info"
+msgstr "Otra Información"
+
+msgctxt "view:purchase.purchase:"
+msgid "Pay"
+msgstr "Pagar"
+
+msgctxt "view:purchase.purchase:"
+msgid "Purchase"
+msgstr "Compra"
+
+msgctxt "view:purchase.purchase:"
+msgid "Total Amount"
+msgstr "Importe Total"
+
+msgctxt "view:purchase.purchase:"
+msgid "Untaxed Amount"
+msgstr "Base imponible"
+
+msgctxt "view:res.user:"
+msgid "Purchase Limit"
+msgstr "Límite de Compras"
+
+msgctxt "wizard_button:nodux_purchase_one.print_report_purchase,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:nodux_purchase_one.print_report_purchase,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "wizard_button:purchase.payment,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:purchase.payment,start,pay_:"
+msgid "Pay"
+msgstr "Pagar"
