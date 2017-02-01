@@ -697,6 +697,13 @@ class WizardPurchasePayment(Wizard):
         purchase = Purchase(active_id)
         company = Company(Transaction().context.get('company'))
 
+        if purchase.party.supplier == True:
+            pass
+        else:
+            party = purchase.party
+            party.customer = True
+            party.save()
+
         User = pool.get('res.user')
         user = User(Transaction().user)
         limit = user.limit_purchase
