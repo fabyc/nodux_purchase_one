@@ -323,6 +323,13 @@ class Purchase(Workflow, ModelSQL, ModelView):
         Company = Pool().get('company.company')
         company = Company(Transaction().context.get('company'))
         for purchase in purchases:
+            if purchase.party.supplier == True:
+                pass
+            else:
+                party = purchase.party
+                party.supplier = True
+                party.save()
+                
             for line in purchase.lines:
                 product = line.product.template
                 product.total = line.product.template.total + line.quantity
@@ -701,7 +708,7 @@ class WizardPurchasePayment(Wizard):
             pass
         else:
             party = purchase.party
-            party.customer = True
+            party.supplier = True
             party.save()
 
         User = pool.get('res.user')
