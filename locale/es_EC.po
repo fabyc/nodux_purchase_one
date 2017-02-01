@@ -203,8 +203,8 @@ msgid "Name"
 msgstr "Nombre"
 
 msgctxt "field:purchase.purchase,reference:"
-msgid "Reference"
-msgstr "Referencia"
+msgid "Number"
+msgstr "Número"
 
 msgctxt "field:purchase.purchase,residual_amount:"
 msgid "Residual Amount"

@@ -54,7 +54,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 Eval('context', {}).get('company', -1)),
             ],
         depends=['state'], select=True)
-    reference = fields.Char('Reference', readonly=True, select=True)
+    reference = fields.Char('Number', readonly=True, select=True)
     description = fields.Char('Description',
         states={
             'readonly': Eval('state') != 'draft',
@@ -339,7 +339,25 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 reference = company.sequence_purchase
                 company.sequence_purchase = company.sequence_purchase + 1
                 company.save()
-                purchase.reference = str(reference)
+
+                if len(str(reference)) == 1:
+                    reference_end = 'FP-00000000' + str(reference)
+                elif len(str(reference)) == 2:
+                    reference_end = 'FP-0000000' + str(reference)
+                elif len(str(reference)) == 3:
+                    reference_end = 'FP-000000' + str(reference)
+                elif len(str(reference)) == 4:
+                    reference_end = 'FP-00000' + str(reference)
+                elif len(str(reference)) == 5:
+                    reference_end = 'FP-0000' + str(reference)
+                elif len(str(reference)) == 6:
+                    reference_end = 'FP-000' + str(reference)
+                elif len(str(reference)) == 7:
+                    reference_end = 'FP-00' + str(reference)
+                elif len(str(reference)) == 8:
+                    reference_end = 'FP-0' + str(reference)
+
+                purchase.reference = str(reference_end)
                 purchase.state = 'confirmed'
                 purchase.save()
         cls.write([p for p in purchases], {
