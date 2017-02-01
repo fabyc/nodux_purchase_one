@@ -11,8 +11,12 @@ msgid "Company"
 msgstr "Empresa"
 
 msgctxt "field:nodux_purchase_one.print_report_purchase.start,date:"
-msgid "Sale Date"
-msgstr "Fecha de Venta"
+msgid "Purchase Date"
+msgstr "Fecha Inicio"
+
+msgctxt "field:nodux_purchase_one.print_report_purchase.start,date_end:"
+msgid "Purchase Date End"
+msgstr "Fecha Fin"
 
 msgctxt "field:nodux_purchase_one.print_report_purchase.start,id:"
 msgid "ID"
@@ -333,6 +337,10 @@ msgstr "Formulario de Pago de Compra"
 msgctxt "model:purchase.purchase,name:"
 msgid "Purchase"
 msgstr "Compra"
+
+msgctxt "odt:nodux_purchase_one.report_purchases:"
+msgid "-"
+msgstr ""
 
 msgctxt "odt:nodux_purchase_one.report_purchases:"
 msgid "/"
