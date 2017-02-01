@@ -329,7 +329,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 party = purchase.party
                 party.supplier = True
                 party.save()
-                
+
             for line in purchase.lines:
                 product = line.product.template
                 product.total = line.product.template.total + line.quantity
