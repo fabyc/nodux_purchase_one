@@ -82,8 +82,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
 
     party = fields.Many2One('party.party', 'Supplier', required=True, select=True,
         states={
-            'readonly': ((Eval('state') != 'draft')
-                | (Eval('lines', [0]) & Eval('party'))),
+            'readonly': ((Eval('state') != 'draft')),
             },
         depends=['state'])
 
@@ -897,6 +896,8 @@ class ReportPurchases(Report):
             timezone = pytz.timezone(company.timezone)
             dt = datetime.now()
             hora = datetime.astimezone(dt.replace(tzinfo=pytz.utc), timezone)
+        else:
+            company.raise_user_error('Configure la zona Horaria de la empresa')
 
         localcontext['company'] = company
         localcontext['fecha'] = fecha.strftime('%d/%m/%Y')
