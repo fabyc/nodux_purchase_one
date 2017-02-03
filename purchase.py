@@ -323,6 +323,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
         Company = Pool().get('company.company')
         company = Company(Transaction().context.get('company'))
         for purchase in purchases:
+
             if purchase.party.supplier == True:
                 pass
             else:
@@ -333,6 +334,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
             for line in purchase.lines:
                 product = line.product.template
                 product.total = line.product.template.total + line.quantity
+                product.cost_price = line.unit_price
                 product.save()
 
             if not purchase.reference:
@@ -552,7 +554,7 @@ class PurchaseLine(ModelSQL, ModelView):
             res['unit_digits'] = self.product.default_uom.digits
 
         with Transaction().set_context(self._get_context_purchase_price()):
-            res['unit_price'] = Product.get_sale_price([self.product],
+            res['unit_price'] = Product.get_purchase_price([self.product],
                     self.quantity or 0)[self.product.id]
             if res['unit_price']:
                 res['unit_price'] = res['unit_price'].quantize(
@@ -577,7 +579,7 @@ class PurchaseLine(ModelSQL, ModelView):
 
         with Transaction().set_context(
                 self._get_context_purchase_price()):
-            res['unit_price'] = Product.get_sale_price([self.product],
+            res['unit_price'] = Product.get_purchase_price([self.product],
                 self.quantity or 0)[self.product.id]
             if res['unit_price']:
                 res['unit_price'] = res['unit_price'].quantize(
