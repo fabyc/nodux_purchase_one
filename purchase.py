@@ -376,6 +376,8 @@ class Purchase(Workflow, ModelSQL, ModelView):
                     reference_end = 'FP-00' + str(reference)
                 elif len(str(reference)) == 8:
                     reference_end = 'FP-0' + str(reference)
+                elif len(str(reference)) == 9:
+                    reference_end = 'FP-' + str(reference)
 
                 purchase.reference = str(reference_end)
                 purchase.state = 'confirmed'
@@ -754,10 +756,41 @@ class WizardPurchasePayment(Wizard):
             self.raise_user_error(u'Ha excedido el límite de Compras, contacte con el Administrador de NODUX')
 
         if not purchase.reference:
+
+            for line in purchase.lines:
+                product = line.product.template
+                if product.type == "goods":
+                    product.total = line.product.template.total + line.quantity
+                product.cost_price = line.unit_price
+                product.save()
+
             reference = company.sequence_purchase
             company.sequence_purchase = company.sequence_purchase + 1
             company.save()
-            purchase.reference = str(reference)
+
+            if len(str(reference)) == 1:
+                reference_end = 'FP-00000000' + str(reference)
+            elif len(str(reference)) == 2:
+                reference_end = 'FP-0000000' + str(reference)
+            elif len(str(reference)) == 3:
+                reference_end = 'FP-000000' + str(reference)
+            elif len(str(reference)) == 4:
+                reference_end = 'FP-00000' + str(reference)
+            elif len(str(reference)) == 5:
+                reference_end = 'FP-0000' + str(reference)
+            elif len(str(reference)) == 6:
+                reference_end = 'FP-000' + str(reference)
+            elif len(str(reference)) == 7:
+                reference_end = 'FP-00' + str(reference)
+            elif len(str(reference)) == 8:
+                reference_end = 'FP-0' + str(reference)
+            elif len(str(reference)) == 9:
+                reference_end = 'FP-' + str(reference)
+
+            purchase.reference = str(reference_end)
+            purchase.save()
+
+
         form = self.start
 
         if purchase.paid_amount > Decimal(0.0):
