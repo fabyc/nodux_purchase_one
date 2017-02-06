@@ -326,8 +326,9 @@ class Purchase(Workflow, ModelSQL, ModelView):
         for purchase in purchases:
             for line in purchase.lines:
                 product = line.product.template
-                product.total = line.product.template.total - line.quantity
-                product.save()
+                if product.type == "goods":
+                    product.total = line.product.template.total - line.quantity
+                    product.save()
         cls.write([p for p in purchases], {
                 'state': 'anulled',
                 })
@@ -349,7 +350,8 @@ class Purchase(Workflow, ModelSQL, ModelView):
 
             for line in purchase.lines:
                 product = line.product.template
-                product.total = line.product.template.total + line.quantity
+                if product.type == "goods":
+                    product.total = line.product.template.total + line.quantity
                 product.cost_price = line.unit_price
                 product.save()
 
