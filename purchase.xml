@@ -104,7 +104,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="model">purchase.purchase,-1</field>
             <field name="action" ref="report_purchase_pos"/>
         </record>
-        <!--REPORTE TOTAL DE VENTAS-->
+        <!--REPORTE TOTAL DE COMPRAS-->
         <record model="ir.ui.view" id="print_purchase_report_start_view_form">
             <field name="model">nodux_purchase_one.print_report_purchase.start</field>
             <field name="type">form</field>
@@ -122,6 +122,29 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         </record>
         <menuitem parent="menu_purchase" action="wizard_purchases_report"
             id="menu_purchase_report" icon="tryton-print"/>
+
+        <!--Reporte de cuentas por cobrar -->
+        <record model="ir.ui.view" id="purchase_view_tree">
+            <field name="model">purchase.purchase</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="name">purchase_view_tree</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_payable_form">
+            <field name="name">Por Pagar</field>
+            <field name="res_model">purchase.purchase</field>
+            <field name="domain">[('party', '!=', None), ('state', '=', 'confirmed')]</field>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_payable_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="purchase_view_tree"/>
+            <field name="act_window" ref="act_payable_form"/>
+        </record>
+
+        <menuitem parent="menu_purchase" action="act_payable_form"
+            sequence="3" id="menu_payable_form"/>
 
     </data>
 </tryton>

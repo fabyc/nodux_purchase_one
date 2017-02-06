@@ -125,6 +125,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
         depends=['currency_digits'])
     paid_amount = fields.Numeric('Paid Amount', readonly=True)
     residual_amount = fields.Numeric('Residual Amount', readonly=True)
+    state_date = fields.Function(fields.Char('State dy Date', readonly=True), 'get_state_date')
 
     @classmethod
     def __register__(cls, module_name):
@@ -190,6 +191,21 @@ class Purchase(Workflow, ModelSQL, ModelView):
         if company:
             return Company(company).currency.digits
         return 2
+
+    @classmethod
+    def get_state_date(cls, purchases, names):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        date = Date.today()
+        result = {n: {p.id: Decimal(0) for p in purchases} for n in names}
+        for name in names:
+            for purchase in purchases:
+                if purchase.purchase_date_end < date:
+                    result[name][purchase.id] = 'vencida'
+                else:
+                    result[name][purchase.id] = ''
+
+        return result
 
     @fields.depends('currency')
     def on_change_with_currency_digits(self, name=None):

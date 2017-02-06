@@ -214,6 +214,10 @@ msgctxt "field:purchase.purchase,state:"
 msgid "State"
 msgstr "Estado"
 
+msgctxt "field:purchase.purchase,state_date:"
+msgid "State dy Date"
+msgstr "Estado por Fecha"
+
 msgctxt "field:purchase.purchase,tax_amount:"
 msgid "Tax"
 msgstr "Impuesto"
@@ -257,6 +261,10 @@ msgstr "Compras Ilimitadas"
 msgctxt "model:ir.action,name:"
 msgid "POS Sales"
 msgstr "Compras"
+
+msgctxt "model:ir.action,name:act_payable_form"
+msgid "Por cobrar"
+msgstr ""
 
 msgctxt "model:ir.action,name:act_purchase_form"
 msgid "Purchase"
@@ -309,6 +317,10 @@ msgstr "Realizado"
 msgctxt "model:ir.ui.menu,name:"
 msgid "Sales"
 msgstr "Compras"
+
+msgctxt "model:ir.ui.menu,name:menu_payable_form"
+msgid "Por cobrar"
+msgstr ""
 
 msgctxt "model:ir.ui.menu,name:menu_purchase"
 msgid "Purchases"
@@ -579,12 +591,20 @@ msgid "Other Info"
 msgstr "Otra Información"
 
 msgctxt "view:purchase.purchase:"
+msgid "Paid Amount"
+msgstr "Total Pagado"
+
+msgctxt "view:purchase.purchase:"
 msgid "Pay"
 msgstr "Pagar"
 
 msgctxt "view:purchase.purchase:"
 msgid "Purchase"
 msgstr "Compra"
+
+msgctxt "view:purchase.purchase:"
+msgid "Residual Amount"
+msgstr "Total Pendiente"
 
 msgctxt "view:purchase.purchase:"
 msgid "Total Amount"
