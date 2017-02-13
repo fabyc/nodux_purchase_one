@@ -66,17 +66,15 @@ class Purchase(Workflow, ModelSQL, ModelView):
         ('done', 'Done'),
         ('anulled', 'Anulled'),
     ], 'State', readonly=True, required=True)
-    purchase_date = fields.Date('Purchase Date',
+    purchase_date = fields.Date('Purchase Date', required= True,
         states={
             'readonly': ~Eval('state').in_(['draft']),
-            'required': ~Eval('state').in_(['draft', 'cancel']),
             },
         depends=['state'])
 
-    purchase_date_end = fields.Date('Purchase Date End',
+    purchase_date_end = fields.Date('Purchase Date End', required=True,
         states={
             'readonly': ~Eval('state').in_(['draft']),
-            'required': ~Eval('state').in_(['draft', 'cancel']),
             },
         depends=['state'])
 
