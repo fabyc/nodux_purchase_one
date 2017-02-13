@@ -146,5 +146,18 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <menuitem parent="menu_purchase" action="act_payable_form"
             sequence="3" id="menu_payable_form"/>
 
+        <!-- relacionado-->
+        <record model="ir.action.act_window" id="act_purchase_relate_form">
+            <field name="name">Compras</field>
+            <field name="res_model">purchase.purchase</field>
+            <field name="domain">[('id', 'in', Eval('active_ids'))]</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="act_open_sale_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="act_purchase_relate_form"/>
+        </record>
+
     </data>
 </tryton>
