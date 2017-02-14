@@ -349,7 +349,10 @@ class Purchase(Workflow, ModelSQL, ModelView):
             for line in purchase.lines:
                 product = line.product.template
                 if product.type == "goods":
-                    product.total = line.product.template.total + line.quantity
+                    if line.product.template.total == None:
+                        product.total = line.quantity
+                    else:
+                        product.total = line.product.template.total + line.quantity
                 product.cost_price = line.unit_price
                 product.save()
 
@@ -758,7 +761,10 @@ class WizardPurchasePayment(Wizard):
             for line in purchase.lines:
                 product = line.product.template
                 if product.type == "goods":
-                    product.total = line.product.template.total + line.quantity
+                    if line.product.template.total == None:
+                        product.total = line.quantity
+                    else:
+                        product.total = line.product.template.total + line.quantity
                 product.cost_price = line.unit_price
                 product.save()
 
