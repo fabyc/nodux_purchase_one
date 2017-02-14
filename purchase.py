@@ -143,12 +143,12 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 ('draft', 'confirmed'),
                 ('draft', 'done'),
                 ('confirmed', 'done'),
-                ('done', 'anull'),
+                ('done', 'anulled'),
                 ))
 
         cls._buttons.update({
                 'wizard_purchase_payment': {
-                    'invisible': Eval('state') == 'done',
+                    'invisible': (Eval('state').in_(['done', 'anulled'])),
                     'readonly': Not(Bool(Eval('lines'))),
                     },
                 'confirm': {
@@ -156,12 +156,28 @@ class Purchase(Workflow, ModelSQL, ModelView):
                     'readonly': ~Eval('lines', []),
                     },
                 'anull': {
-                    'invisible': Eval('state') == 'draft',
+                    'invisible': (Eval('state').in_(['draft', 'anulled', 'confirm'])),
                     'readonly': Not(Bool(Eval('lines'))),
                     },
 
                 })
         cls._states_cached = ['confirmed', 'done', 'cancel']
+
+    @classmethod
+    def copy(cls, purchases, default=None):
+        if default is None:
+            default = {}
+        Date = Pool().get('ir.date')
+        date = Date.today()
+
+        default = default.copy()
+        default['state'] = 'draft'
+        default['reference'] = None
+        default['paid_amount'] = Decimal(0.0)
+        default['residual_amount'] = None
+        default['purchase_date'] = date
+        #default.setdefault('', None)
+        return super(Purchase, cls).copy(purchases, default=default)
 
     @staticmethod
     def default_company():
@@ -757,7 +773,6 @@ class WizardPurchasePayment(Wizard):
             self.raise_user_error(u'Ha excedido el límite de Compras, contacte con el Administrador de NODUX')
 
         if not purchase.reference:
-
             for line in purchase.lines:
                 product = line.product.template
                 if product.type == "goods":
@@ -1004,6 +1019,5 @@ class ReportPurchases(Report):
         localcontext['subtotal_total'] = subtotal_total
         localcontext['subtotal14'] = subtotal14
         localcontext['subtotal0'] = subtotal0
-
 
         return super(ReportPurchases, cls).parse(report, objects, data, localcontext)
