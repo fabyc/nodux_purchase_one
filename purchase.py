@@ -176,6 +176,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
         default['paid_amount'] = Decimal(0.0)
         default['residual_amount'] = None
         default['purchase_date'] = date
+        default['purchase_date_end'] = date
         #default.setdefault('', None)
         return super(Purchase, cls).copy(purchases, default=default)
 
