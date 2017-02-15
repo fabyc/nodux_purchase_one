@@ -739,10 +739,17 @@ class WizardPurchasePayment(Wizard):
         Purchase = pool.get('purchase.purchase')
         purchase = Purchase(Transaction().context['active_id'])
 
-        if purchase.residual_amount > Decimal(0.0):
-            payment_amount = purchase.residual_amount
+        if purchase.purchase_date_end > purchase.purchase_date:
+            if purchase.residual_amount > Decimal(0.0):
+                payment_amount = purchase.residual_amount
+            else:
+                payment_amount = Decimal(0.0)
         else:
-            payment_amount = purchase.total_amount
+            if purchase.residual_amount > Decimal(0.0):
+                payment_amount = purchase.residual_amount
+            else:
+                payment_amount = purchase.total_amount
+
         return {
             'payment_amount': payment_amount,
             'currency_digits': purchase.currency_digits,
