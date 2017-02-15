@@ -757,10 +757,13 @@ class WizardPurchasePayment(Wizard):
         purchase = Purchase(active_id)
         company = Company(Transaction().context.get('company'))
         form = self.start
-        
+
         if purchase.residual_amount > Decimal(0.0):
             if form.payment_amount > purchase.residual_amount:
                 self.raise_user_error('No puede pagar un monto mayor al valor pendiente %s', str(purchase.residual_amount ))
+
+        if form.payment_amount > purchase.total_amount:
+            self.raise_user_error('No puede pagar un monto mayor al monto total %s', str(purchase.total_amount ))
 
         if purchase.party.supplier == True:
             pass
