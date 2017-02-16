@@ -164,6 +164,17 @@ class Purchase(Workflow, ModelSQL, ModelView):
         cls._states_cached = ['confirmed', 'done', 'cancel']
 
     @classmethod
+    def delete(cls, purchases):
+        for purchase in purchases:
+            if (purchase.state == 'confirmed'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ya ha sido confirmada',(purchase.reference))
+            if (purchase.state == 'done'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ya ha sido realizada',(purchase.reference))
+            if (purchase.state == 'anulled'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ha sido anulada',(purchase.reference))
+        super(Purchase, cls).delete(purchases)
+
+    @classmethod
     def copy(cls, purchases, default=None):
         if default is None:
             default = {}
@@ -841,9 +852,7 @@ class WizardPurchasePayment(Wizard):
             purchase.state = 'confirmed'
         purchase.save()
 
-
         return 'end'
-
 
 class PurchaseReport(Report):
     __name__ = 'purchase.purchase_pos'
