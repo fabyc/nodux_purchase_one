@@ -13,7 +13,9 @@ __metaclass__ = PoolMeta
 class User:
     __name__ = 'res.user'
 
-    limit_purchase = fields.Integer('Purchase Limit')
+    limit_purchase = fields.Integer('Purchase Limit', states={
+        'readonly': Eval('unlimited_purchase', True)
+    })
     unlimited_purchase = fields.Boolean('Unlimited Purchase')
 
     @classmethod
