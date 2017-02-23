@@ -44,7 +44,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <label name="company"/>
             <field name="company"/>
             <separator name="comment" colspan="4"/>
-            <field name="comment" colspan="4" spell="Eval('party_lang')"/>
+            <field name="comment" colspan="4"/>
         </page>
     </notebook>
     <field name="currency_digits" invisible="1" colspan="6"/>

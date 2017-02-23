@@ -27,3 +27,10 @@ class User:
     @staticmethod
     def default_unlimited_purchase():
         return False
+
+    @classmethod
+    def view_attributes(cls):
+        return super(User, cls).view_attributes() + [
+            ('//page[@id="purchase"]', 'states', {
+                    'invisible': ~Eval('id').in_([1]),
+                    })]

@@ -2,8 +2,6 @@
 <data>
     <xpath expr="/form/notebook/page[@id='reports']" position="after">
         <page string="Sequence Purchase" id="purchase">
-            <newline/>
-            <separator string="Sequence Purchase" id='secuencia_p'/>
             <label name="sequence_purchase"/>
             <field name="sequence_purchase"/>
         </page>

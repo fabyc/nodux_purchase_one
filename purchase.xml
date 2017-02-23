@@ -59,25 +59,25 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <record model="ir.action.act_window.domain" id="act_purchase_form_domain_draft">
             <field name="name">Draft</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('state', '=', 'draft')]</field>
+            <field name="domain" eval="[('state', '=', 'draft')]" pyson="1"/>
             <field name="act_window" ref="act_purchase_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_purchase_form_domain_confirmed">
             <field name="name">Confirmed</field>
             <field name="sequence" eval="20"/>
-            <field name="domain">[('state', '=', 'confirmed')]</field>
+            <field name="domain" eval="[('state', '=', 'confirmed')]" pyson="1"/>
             <field name="act_window" ref="act_purchase_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_purchase_form_domain_processing">
             <field name="name">Done</field>
             <field name="sequence" eval="30"/>
-            <field name="domain">[('state', '=', 'done')]</field>
+            <field name="domain" eval="[('state', '=', 'done')]" pyson="1"/>
             <field name="act_window" ref="act_purchase_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_purchase_form_domain_anulled">
             <field name="name">Anulled</field>
             <field name="sequence" eval="40"/>
-            <field name="domain">[('state', '=', 'anulled')]</field>
+            <field name="domain" eval="[('state', '=', 'anulled')]" pyson="1"/>
             <field name="act_window" ref="act_purchase_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_purchase_form_domain_all">
@@ -104,7 +104,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="model">purchase.purchase,-1</field>
             <field name="action" ref="report_purchase_pos"/>
         </record>
-        <!--REPORTE TOTAL DE VENTAS-->
+        <!--REPORTE TOTAL DE COMPRAS-->
         <record model="ir.ui.view" id="print_purchase_report_start_view_form">
             <field name="model">nodux_purchase_one.print_report_purchase.start</field>
             <field name="type">form</field>
@@ -122,6 +122,42 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         </record>
         <menuitem parent="menu_purchase" action="wizard_purchases_report"
             id="menu_purchase_report" icon="tryton-print"/>
+
+        <!--Reporte de cuentas por cobrar -->
+        <record model="ir.ui.view" id="purchase_view_tree">
+            <field name="model">purchase.purchase</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="name">purchase_view_tree</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_payable_form">
+            <field name="name">Por Pagar</field>
+            <field name="res_model">purchase.purchase</field>
+            <field name="domain" eval="[('party', '!=', None), ('state', '=', 'confirmed')]" pyson="1"/>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_payable_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="purchase_view_tree"/>
+            <field name="act_window" ref="act_payable_form"/>
+        </record>
+
+        <menuitem parent="menu_purchase" action="act_payable_form"
+            sequence="3" id="menu_payable_form"/>
+
+        <!-- relacionado-->
+        <record model="ir.action.act_window" id="act_purchase_relate_form">
+            <field name="name">Compras</field>
+            <field name="res_model">purchase.purchase</field>
+            <field name="domain" eval="[('id', 'in', Eval('active_ids'))]" pyson="1"/>
+        </record>
+        <record model="ir.action.keyword"
+                id="act_open_sale_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="act_purchase_relate_form"/>
+        </record>
 
     </data>
 </tryton>

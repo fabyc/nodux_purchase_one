@@ -11,8 +11,12 @@ msgid "Company"
 msgstr "Empresa"
 
 msgctxt "field:nodux_purchase_one.print_report_purchase.start,date:"
-msgid "Sale Date"
-msgstr "Fecha de Venta"
+msgid "Purchase Date"
+msgstr "Fecha Inicio"
+
+msgctxt "field:nodux_purchase_one.print_report_purchase.start,date_end:"
+msgid "Purchase Date End"
+msgstr "Fecha Fin"
 
 msgctxt "field:nodux_purchase_one.print_report_purchase.start,id:"
 msgid "ID"
@@ -199,8 +203,8 @@ msgid "Name"
 msgstr "Nombre"
 
 msgctxt "field:purchase.purchase,reference:"
-msgid "Reference"
-msgstr "Referencia"
+msgid "Number"
+msgstr "Número"
 
 msgctxt "field:purchase.purchase,residual_amount:"
 msgid "Residual Amount"
@@ -209,6 +213,10 @@ msgstr "Pendiente"
 msgctxt "field:purchase.purchase,state:"
 msgid "State"
 msgstr "Estado"
+
+msgctxt "field:purchase.purchase,state_date:"
+msgid "State dy Date"
+msgstr "Estado por Fecha"
 
 msgctxt "field:purchase.purchase,tax_amount:"
 msgid "Tax"
@@ -253,6 +261,10 @@ msgstr "Compras Ilimitadas"
 msgctxt "model:ir.action,name:"
 msgid "POS Sales"
 msgstr "Compras"
+
+msgctxt "model:ir.action,name:act_payable_form"
+msgid "Por cobrar"
+msgstr ""
 
 msgctxt "model:ir.action,name:act_purchase_form"
 msgid "Purchase"
@@ -306,6 +318,10 @@ msgctxt "model:ir.ui.menu,name:"
 msgid "Sales"
 msgstr "Compras"
 
+msgctxt "model:ir.ui.menu,name:menu_payable_form"
+msgid "Por cobrar"
+msgstr ""
+
 msgctxt "model:ir.ui.menu,name:menu_purchase"
 msgid "Purchases"
 msgstr "Compras"
@@ -333,182 +349,6 @@ msgstr "Formulario de Pago de Compra"
 msgctxt "model:purchase.purchase,name:"
 msgid "Purchase"
 msgstr "Compra"
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "/"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "COMPRAS"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "Cliente"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "FECHA DE IMPRESIÓN:"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "Fecha"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "IVA"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "Monto total"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "Nodux Cía. Ltda."
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "RESUMEN"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "RESUMEN DE"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "SUBTOTAL 0%"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "SUBTOTAL 14%"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "SUBTOTALES"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "Subtotal"
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "[ PAG."
-msgstr ""
-
-msgctxt "odt:nodux_purchase_one.report_purchases:"
-msgid "]"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "$"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "%:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid ","
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "/100"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "0"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "14"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "4"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid ":"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "C.I./RUC"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Cant."
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Código"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "DOLARES"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Descripción"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Dirección:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Fecha:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "IVA 1"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Nodux - (07) 2 560215 - 0999323367 - hola@nodux.e"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Nodux Cía. Ltda.: (07) 2 560215 – 0999323367 – hola@nodux.ec"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "P. Unit."
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Proveedor"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "SON:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Sistema"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Subt."
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Subtotal"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Subtotal:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "TOTAL:"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "Teléfono"
-msgstr ""
-
-msgctxt "odt:purchase.purchase_pos:"
-msgid "c"
-msgstr "c"
 
 msgctxt "selection:purchase.line,type:"
 msgid "Line"
@@ -571,12 +411,20 @@ msgid "Other Info"
 msgstr "Otra Información"
 
 msgctxt "view:purchase.purchase:"
+msgid "Paid Amount"
+msgstr "Total Pagado"
+
+msgctxt "view:purchase.purchase:"
 msgid "Pay"
 msgstr "Pagar"
 
 msgctxt "view:purchase.purchase:"
 msgid "Purchase"
 msgstr "Compra"
+
+msgctxt "view:purchase.purchase:"
+msgid "Residual Amount"
+msgstr "Total Pendiente"
 
 msgctxt "view:purchase.purchase:"
 msgid "Total Amount"

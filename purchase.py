@@ -54,7 +54,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 Eval('context', {}).get('company', -1)),
             ],
         depends=['state'], select=True)
-    reference = fields.Char('Reference', readonly=True, select=True)
+    reference = fields.Char('Number', readonly=True, select=True)
     description = fields.Char('Description',
         states={
             'readonly': Eval('state') != 'draft',
@@ -66,24 +66,21 @@ class Purchase(Workflow, ModelSQL, ModelView):
         ('done', 'Done'),
         ('anulled', 'Anulled'),
     ], 'State', readonly=True, required=True)
-    purchase_date = fields.Date('Purchase Date',
+    purchase_date = fields.Date('Purchase Date', required= True,
         states={
             'readonly': ~Eval('state').in_(['draft']),
-            'required': ~Eval('state').in_(['draft', 'cancel']),
             },
         depends=['state'])
 
-    purchase_date_end = fields.Date('Purchase Date End',
+    purchase_date_end = fields.Date('Purchase Date End', required=True,
         states={
             'readonly': ~Eval('state').in_(['draft']),
-            'required': ~Eval('state').in_(['draft', 'cancel']),
             },
         depends=['state'])
 
     party = fields.Many2One('party.party', 'Supplier', required=True, select=True,
         states={
-            'readonly': ((Eval('state') != 'draft')
-                | (Eval('lines', [0]) & Eval('party'))),
+            'readonly': ((Eval('state') != 'draft')),
             },
         depends=['state'])
 
@@ -126,10 +123,12 @@ class Purchase(Workflow, ModelSQL, ModelView):
         depends=['currency_digits'])
     paid_amount = fields.Numeric('Paid Amount', readonly=True)
     residual_amount = fields.Numeric('Residual Amount', readonly=True)
+    state_date = fields.Function(fields.Char('State dy Date', readonly=True), 'get_state_date')
 
     @classmethod
     def __register__(cls, module_name):
-        cursor = Transaction().cursor
+        transaction = Transaction()
+        cursor = transaction.connection.cursor()
         sql_table = cls.__table__()
 
         super(Purchase, cls).__register__(module_name)
@@ -141,9 +140,16 @@ class Purchase(Workflow, ModelSQL, ModelView):
     def __setup__(cls):
         super(Purchase, cls).__setup__()
 
+        cls._transitions |= set((
+                ('draft', 'confirmed'),
+                ('draft', 'done'),
+                ('confirmed', 'done'),
+                ('done', 'anulled'),
+                ))
+
         cls._buttons.update({
                 'wizard_purchase_payment': {
-                    'invisible': Eval('state') == 'done',
+                    'invisible': (Eval('state').in_(['done', 'anulled'])),
                     'readonly': Not(Bool(Eval('lines'))),
                     },
                 'confirm': {
@@ -151,12 +157,40 @@ class Purchase(Workflow, ModelSQL, ModelView):
                     'readonly': ~Eval('lines', []),
                     },
                 'anull': {
-                    'invisible': Eval('state') == 'draft',
+                    'invisible': (Eval('state').in_(['draft', 'anulled', 'confirm'])),
                     'readonly': Not(Bool(Eval('lines'))),
                     },
 
                 })
         cls._states_cached = ['confirmed', 'done', 'cancel']
+
+    @classmethod
+    def delete(cls, purchases):
+        for purchase in purchases:
+            if (purchase.state == 'confirmed'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ya ha sido confirmada',(purchase.reference))
+            if (purchase.state == 'done'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ya ha sido realizada',(purchase.reference))
+            if (purchase.state == 'anulled'):
+                cls.raise_user_error('No puede eliminar la compra %s,\nporque ha sido anulada',(purchase.reference))
+        super(Purchase, cls).delete(purchases)
+
+    @classmethod
+    def copy(cls, purchases, default=None):
+        if default is None:
+            default = {}
+        Date = Pool().get('ir.date')
+        date = Date.today()
+
+        default = default.copy()
+        default['state'] = 'draft'
+        default['reference'] = None
+        default['paid_amount'] = Decimal(0.0)
+        default['residual_amount'] = None
+        default['purchase_date'] = date
+        default['purchase_date_end'] = date
+        #default.setdefault('', None)
+        return super(Purchase, cls).copy(purchases, default=default)
 
     @staticmethod
     def default_company():
@@ -185,6 +219,21 @@ class Purchase(Workflow, ModelSQL, ModelView):
             return Company(company).currency.digits
         return 2
 
+    @classmethod
+    def get_state_date(cls, purchases, names):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        date = Date.today()
+        result = {n: {p.id: Decimal(0) for p in purchases} for n in names}
+        for name in names:
+            for purchase in purchases:
+                if purchase.purchase_date_end < date:
+                    result[name][purchase.id] = 'vencida'
+                else:
+                    result[name][purchase.id] = ''
+
+        return result
+
     @fields.depends('currency')
     def on_change_with_currency_digits(self, name=None):
         if self.currency:
@@ -200,28 +249,25 @@ class Purchase(Workflow, ModelSQL, ModelView):
 
     @fields.depends('lines', 'currency', 'party')
     def on_change_lines(self):
-        res = {
-            'untaxed_amount': Decimal('0.0'),
-            'tax_amount': Decimal('0.0'),
-            'total_amount': Decimal('0.0'),
-            }
+        self.untaxed_amount = Decimal('0.0')
+        self.tax_amount = Decimal('0.0')
+        self.total_amount = Decimal('0.0')
+
         if self.lines:
-            res['untaxed_amount'] = reduce(lambda x, y: x + y,
+            self.untaxed_amount = reduce(lambda x, y: x + y,
                 [(getattr(l, 'amount', None) or Decimal(0))
                     for l in self.lines if l.type == 'line'], Decimal(0)
                 )
-            res['total_amount'] = reduce(lambda x, y: x + y,
+            self.total_amount = reduce(lambda x, y: x + y,
                 [(getattr(l, 'amount_w_tax', None) or Decimal(0))
                     for l in self.lines if l.type == 'line'], Decimal(0)
                 )
         if self.currency:
-            res['untaxed_amount'] = self.currency.round(res['untaxed_amount'])
-            res['total_amount'] = self.currency.round(res['total_amount'])
-        res['tax_amount'] = res['total_amount'] - res['untaxed_amount']
+            self.untaxed_amount = self.currency.round(self.untaxed_amount)
+            self.total_amount = self.currency.round(self.total_amount)
+        self.tax_amount = self.total_amount - self.untaxed_amount
         if self.currency:
-            res['tax_amount'] = self.currency.round(res['tax_amount'])
-        return res
-
+            self.tax_amount = self.currency.round(self.tax_amount)
 
     def get_tax_amount(self):
         tax = _ZERO
@@ -244,7 +290,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 value = Decimal(0.14)
             else:
                 value = Decimal(0.0)
-            tax = line.unit_price * value
+            tax = (line.unit_price * Decimal(line.quantity)) * value
             taxes += tax
 
         return (self.currency.round(taxes))
@@ -301,6 +347,12 @@ class Purchase(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('anulled')
     def anull(cls, purchases):
+        for purchase in purchases:
+            for line in purchase.lines:
+                product = line.product.template
+                if product.type == "goods":
+                    product.total = line.product.template.total - line.quantity
+                    product.save()
         cls.write([p for p in purchases], {
                 'state': 'anulled',
                 })
@@ -309,22 +361,58 @@ class Purchase(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('confirmed')
     def confirm(cls, purchases):
-        print "Ingresa a este metodo"
         Company = Pool().get('company.company')
         company = Company(Transaction().context.get('company'))
-        print "COmpras ", purchases
         for purchase in purchases:
-            print "Esta aqui"
+
+            if purchase.party.supplier == True:
+                pass
+            else:
+                party = purchase.party
+                party.supplier = True
+                party.save()
+
+            for line in purchase.lines:
+                product = line.product.template
+                if product.type == "goods":
+                    if line.product.template.total == None:
+                        product.total = line.quantity
+                    else:
+                        product.total = line.product.template.total + line.quantity
+                product.cost_price = line.unit_price
+                product.save()
+
             if not purchase.reference:
                 reference = company.sequence_purchase
                 company.sequence_purchase = company.sequence_purchase + 1
                 company.save()
-                purchase.reference = str(reference)
+
+                if len(str(reference)) == 1:
+                    reference_end = 'FP-00000000' + str(reference)
+                elif len(str(reference)) == 2:
+                    reference_end = 'FP-0000000' + str(reference)
+                elif len(str(reference)) == 3:
+                    reference_end = 'FP-000000' + str(reference)
+                elif len(str(reference)) == 4:
+                    reference_end = 'FP-00000' + str(reference)
+                elif len(str(reference)) == 5:
+                    reference_end = 'FP-0000' + str(reference)
+                elif len(str(reference)) == 6:
+                    reference_end = 'FP-000' + str(reference)
+                elif len(str(reference)) == 7:
+                    reference_end = 'FP-00' + str(reference)
+                elif len(str(reference)) == 8:
+                    reference_end = 'FP-0' + str(reference)
+                elif len(str(reference)) == 9:
+                    reference_end = 'FP-' + str(reference)
+
+                purchase.reference = str(reference_end)
                 purchase.state = 'confirmed'
                 purchase.save()
         cls.write([p for p in purchases], {
                 'state': 'confirmed',
                 })
+
 
     @classmethod
     @ModelView.button_action('nodux_purchase_one.wizard_purchase_payment')
@@ -464,7 +552,8 @@ class PurchaseLine(ModelSQL, ModelView):
         if self.unit:
             context['uom'] = self.unit.id
         else:
-            context['uom'] = self.product.default_uom.id
+            if self.product:
+                context['uom'] = self.product.default_uom.id
         return context
 
     @fields.depends('currency')
@@ -494,41 +583,32 @@ class PurchaseLine(ModelSQL, ModelView):
         '_parent_purchase.purchase_date')
     def on_change_product(self):
         Product = Pool().get('product.product')
-        if not self.product:
-            return {}
-        res = {}
+        if self.product:
+            party = None
+            party_context = {}
+            if self.purchase and self.purchase.party:
+                party = self.purchase.party
+                if party.lang:
+                    party_context['language'] = party.lang.code
 
-        party = None
-        party_context = {}
-        if self.purchase and self.purchase.party:
-            party = self.purchase.party
-            if party.lang:
-                party_context['language'] = party.lang.code
+            category = self.product.default_uom.category
+            if not self.unit or self.unit not in category.uoms:
+                self.unit  = self.product.default_uom.id
+                self.unit = self.product.default_uom
+                self.unit.rec_name = self.product.default_uom.rec_name
+                self.unit_digits = self.product.default_uom.digits
 
-        category = self.product.default_uom.category
-        if not self.unit or self.unit not in category.uoms:
-            res['unit'] = self.product.default_uom.id
-            self.unit = self.product.default_uom
-            res['unit.rec_name'] = self.product.default_uom.rec_name
-            res['unit_digits'] = self.product.default_uom.digits
+            with Transaction().set_context(self._get_context_purchase_price()):
+                self.unit_price = Product.get_purchase_price([self.product],
+                        self.quantity or 0)[self.product.id]
+                if self.unit_price:
+                    self.unit_price = self.unit_price.quantize(
+                        Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
 
-        with Transaction().set_context(self._get_context_purchase_price()):
-            res['unit_price'] = Product.get_sale_price([self.product],
-                    self.quantity or 0)[self.product.id]
-            if res['unit_price']:
-                res['unit_price'] = res['unit_price'].quantize(
-                    Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
-        if not self.description:
-            with Transaction().set_context(party_context):
-                res['description'] = Product(self.product.id).rec_name
-
-        self.unit_price = res['unit_price']
-        self.type = 'line'
-        self.description = res['description']
-        res['amount'] = self.on_change_with_amount()
-        res['description'] =  Product(self.product.id).name
-        return res
-
+            self.unit_price = self.unit_price
+            self.type = 'line'
+            self.amount = self.on_change_with_amount()
+            self.description =  self.product.name
 
     @fields.depends('product', 'quantity', 'unit',
         '_parent_purchase.currency', '_parent_purchase.party',
@@ -536,18 +616,14 @@ class PurchaseLine(ModelSQL, ModelView):
     def on_change_quantity(self):
         Product = Pool().get('product.product')
 
-        if not self.product:
-            return {}
-        res = {}
-
-        with Transaction().set_context(
-                self._get_context_purchase_price()):
-            res['unit_price'] = Product.get_sale_price([self.product],
-                self.quantity or 0)[self.product.id]
-            if res['unit_price']:
-                res['unit_price'] = res['unit_price'].quantize(
-                    Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
-        return res
+        if self.product:
+            with Transaction().set_context(
+                    self._get_context_purchase_price()):
+                self.unit_price = Product.get_purchase_price([self.product],
+                    self.quantity or 0)[self.product.id]
+                if self.unit_price :
+                    self.unit_price  = self.unit_price .quantize(
+                        Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
 
     @fields.depends('type', 'quantity', 'unit_price', 'unit',
         '_parent_purchase.currency')
@@ -584,7 +660,7 @@ class PurchaseLine(ModelSQL, ModelView):
             else:
                 value = Decimal(0.0)
 
-            tax_amount = line.unit_price * value
+            tax_amount = (line.unit_price * Decimal(line.quantity)) * value
             return line.get_amount(None) + tax_amount
 
         for line in lines:
@@ -664,10 +740,17 @@ class WizardPurchasePayment(Wizard):
         Purchase = pool.get('purchase.purchase')
         purchase = Purchase(Transaction().context['active_id'])
 
-        if purchase.residual_amount > Decimal(0.0):
-            payment_amount = purchase.residual_amount
+        if purchase.purchase_date_end > purchase.purchase_date:
+            if purchase.residual_amount > Decimal(0.0):
+                payment_amount = purchase.residual_amount
+            else:
+                payment_amount = Decimal(0.0)
         else:
-            payment_amount = purchase.total_amount
+            if purchase.residual_amount > Decimal(0.0):
+                payment_amount = purchase.residual_amount
+            else:
+                payment_amount = purchase.total_amount
+
         return {
             'payment_amount': payment_amount,
             'currency_digits': purchase.currency_digits,
@@ -682,21 +765,69 @@ class WizardPurchasePayment(Wizard):
         active_id = Transaction().context.get('active_id', False)
         purchase = Purchase(active_id)
         company = Company(Transaction().context.get('company'))
+        form = self.start
+
+        if purchase.residual_amount > Decimal(0.0):
+            if form.payment_amount > purchase.residual_amount:
+                self.raise_user_error('No puede pagar un monto mayor al valor pendiente %s', str(purchase.residual_amount ))
+
+        if form.payment_amount > purchase.total_amount:
+            self.raise_user_error('No puede pagar un monto mayor al monto total %s', str(purchase.total_amount ))
+
+        if purchase.party.supplier == True:
+            pass
+        else:
+            party = purchase.party
+            party.supplier = True
+            party.save()
 
         User = pool.get('res.user')
         user = User(Transaction().user)
         limit = user.limit_purchase
 
-        purchases = Purchases.search_count([('state', '=', 'confirmed')])
+        purchases = Purchase.search_count([('state', '=', 'confirmed')])
         if purchases > limit and user.unlimited_purchase != True:
             self.raise_user_error(u'Ha excedido el límite de Compras, contacte con el Administrador de NODUX')
 
         if not purchase.reference:
+            for line in purchase.lines:
+                product = line.product.template
+                if product.type == "goods":
+                    if line.product.template.total == None:
+                        product.total = line.quantity
+                    else:
+                        product.total = line.product.template.total + line.quantity
+                product.cost_price = line.unit_price
+                product.save()
+
             reference = company.sequence_purchase
             company.sequence_purchase = company.sequence_purchase + 1
             company.save()
-            purchase.reference = str(reference)
-        form = self.start
+
+            if len(str(reference)) == 1:
+                reference_end = 'FP-00000000' + str(reference)
+            elif len(str(reference)) == 2:
+                reference_end = 'FP-0000000' + str(reference)
+            elif len(str(reference)) == 3:
+                reference_end = 'FP-000000' + str(reference)
+            elif len(str(reference)) == 4:
+                reference_end = 'FP-00000' + str(reference)
+            elif len(str(reference)) == 5:
+                reference_end = 'FP-0000' + str(reference)
+            elif len(str(reference)) == 6:
+                reference_end = 'FP-000' + str(reference)
+            elif len(str(reference)) == 7:
+                reference_end = 'FP-00' + str(reference)
+            elif len(str(reference)) == 8:
+                reference_end = 'FP-0' + str(reference)
+            elif len(str(reference)) == 9:
+                reference_end = 'FP-' + str(reference)
+
+            purchase.reference = str(reference_end)
+            purchase.save()
+
+
+
 
         if purchase.paid_amount > Decimal(0.0):
             purchase.paid_amount = purchase.paid_amount + form.payment_amount
@@ -713,12 +844,15 @@ class WizardPurchasePayment(Wizard):
 
         return 'end'
 
-
 class PurchaseReport(Report):
     __name__ = 'purchase.purchase_pos'
 
     @classmethod
-    def parse(cls, report, records, data, localcontext):
+    def __setup__(cls):
+        super(PurchaseReport, cls).__setup__()
+
+    @classmethod
+    def get_context(cls, records, data):
         pool = Pool()
         User = pool.get('res.user')
         Purchase = pool.get('purchase.purchase')
@@ -731,15 +865,17 @@ class PurchaseReport(Report):
             decimales='0.0'
 
         user = User(Transaction().user)
-        localcontext['user'] = user
-        localcontext['company'] = user.company
-        localcontext['subtotal_0'] = cls._get_subtotal_0(Purchase, purchase)
-        localcontext['subtotal_12'] = cls._get_subtotal_12(Purchase, purchase)
-        localcontext['subtotal_14'] = cls._get_subtotal_14(Purchase, purchase)
-        localcontext['amount2words']=cls._get_amount_to_pay_words(Purchase, purchase)
-        localcontext['decimales'] = decimales
-        return super(PurchaseReport, cls).parse(report, records, data,
-                localcontext=localcontext)
+        report_context = super(PurchaseReport, cls).get_context(records, data)
+
+        report_context['user'] = user
+        report_context['company'] = user.company
+        report_context['subtotal_0'] = cls._get_subtotal_0(Purchase, purchase)
+        report_context['subtotal_12'] = cls._get_subtotal_12(Purchase, purchase)
+        report_context['subtotal_14'] = cls._get_subtotal_14(Purchase, purchase)
+        report_context['amount2words']=cls._get_amount_to_pay_words(Purchase, purchase)
+        report_context['decimales'] = decimales
+
+        return report_context
 
     @classmethod
     def _get_amount_to_pay_words(cls, Purchase, purchase):
@@ -802,7 +938,8 @@ class PrintReportPurchasesStart(ModelView):
     __name__ = 'nodux_purchase_one.print_report_purchase.start'
 
     company = fields.Many2One('company.company', 'Company', required=True)
-    date = fields.Date("Sale Date", required= True)
+    date = fields.Date("Purchase Date", required= True)
+    date_end = fields.Date("Purchase Date End", required= True)
 
     @staticmethod
     def default_company():
@@ -810,6 +947,11 @@ class PrintReportPurchasesStart(ModelView):
 
     @staticmethod
     def default_date():
+        date = Pool().get('ir.date')
+        return date.today()
+
+    @staticmethod
+    def default_date_end():
         date = Pool().get('ir.date')
         return date.today()
 
@@ -827,6 +969,7 @@ class PrintReportPurchases(Wizard):
         data = {
             'company': self.start.company.id,
             'date' : self.start.date,
+            'date_end' : self.start.date_end,
             }
         return action, data
 
@@ -837,7 +980,11 @@ class ReportPurchases(Report):
     __name__ = 'nodux_purchase_one.report_purchases'
 
     @classmethod
-    def parse(cls, report, objects, data, localcontext):
+    def __setup__(cls):
+        super(ReportPurchases, cls).__setup__()
+
+    @classmethod
+    def get_context(cls, records, data):
         pool = Pool()
         User = pool.get('res.user')
         user = User(Transaction().user)
@@ -845,6 +992,7 @@ class ReportPurchases(Report):
         Company = pool.get('company.company')
         Purchase = pool.get('purchase.purchase')
         fecha = data['date']
+        fecha_fin = data['date_end']
         total_compras =  Decimal(0.0)
         total_iva =  Decimal(0.0)
         subtotal_total =  Decimal(0.0)
@@ -854,7 +1002,7 @@ class ReportPurchases(Report):
         total_pagado = Decimal(0.0)
         total_por_pagar = Decimal(0.0)
         company = Company(data['company'])
-        purchases = Purchase.search([('purchase_date', '=', fecha), ('state','!=', 'draft')])
+        purchases = Purchase.search([('purchase_date', '>=', fecha), ('purchase_date', '<=', fecha_fin), ('state','!=', 'draft')])
 
         if purchases:
             for s in purchases:
@@ -863,7 +1011,8 @@ class ReportPurchases(Report):
                     total_iva += s.tax_amount
                     subtotal_total += s.untaxed_amount
                     total_pagado += s.paid_amount
-                    total_por_pagar += s.residual_amount
+                    if s.residual_amount != None:
+                        total_por_pagar += s.residual_amount
 
                     for line in s.lines:
                         if line.product.taxes_category == True:
@@ -882,17 +1031,21 @@ class ReportPurchases(Report):
             timezone = pytz.timezone(company.timezone)
             dt = datetime.now()
             hora = datetime.astimezone(dt.replace(tzinfo=pytz.utc), timezone)
+        else:
+            company.raise_user_error('Configure la zona Horaria de la empresa')
 
-        localcontext['company'] = company
-        localcontext['fecha'] = fecha.strftime('%d/%m/%Y')
-        localcontext['hora'] = hora.strftime('%H:%M:%S')
-        localcontext['fecha_im'] = hora.strftime('%d/%m/%Y')
-        localcontext['total_ventas'] = total_compras
-        localcontext['sales'] = purchases
-        localcontext['total_iva'] = total_iva
-        localcontext['subtotal_total'] = subtotal_total
-        localcontext['subtotal14'] = subtotal14
-        localcontext['subtotal0'] = subtotal0
+        report_context = super(ReportPurchases, cls).get_context(records, data)
 
+        report_context['company'] = company
+        report_context['fecha'] = fecha.strftime('%d/%m/%Y')
+        report_context['fecha_fin'] = fecha_fin.strftime('%d/%m/%Y')
+        report_context['hora'] = hora.strftime('%H:%M:%S')
+        report_context['fecha_im'] = hora.strftime('%d/%m/%Y')
+        report_context['total_ventas'] = total_compras
+        report_context['sales'] = purchases
+        report_context['total_iva'] = total_iva
+        report_context['subtotal_total'] = subtotal_total
+        report_context['subtotal14'] = subtotal14
+        report_context['subtotal0'] = subtotal0
 
-        return super(ReportPurchases, cls).parse(report, objects, data, localcontext)
+        return report_context

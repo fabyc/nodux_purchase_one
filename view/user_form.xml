@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/form/notebook/page[@id='preferences']" position="after">
-        <page string="Purchase Limit" id="purchase"
-            states="{'invisible': ~Eval('id').in_([1])}">
+        <page string="Purchase Limit" id="purchase">
             <label name="limit_purchase"/>
             <field name="limit_purchase"/>
             <label name="unlimited_purchase"/>
