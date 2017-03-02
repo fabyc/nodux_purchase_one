@@ -292,7 +292,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 value = Decimal(0.14)
             else:
                 value = Decimal(0.0)
-            tax = line.unit_price * value
+            tax = (line.unit_price*Decimal(line.quantity)) * value
             taxes += tax
 
         return (self.currency.round(taxes))
@@ -652,6 +652,8 @@ class PurchaseLine(ModelSQL, ModelView):
         pool = Pool()
         amount_w_tax = {}
         unit_price_w_tax = {}
+        tax_amount = Decimal(0.0)
+        value = Decimal(0.0)
 
         def compute_amount_with_tax(line):
 
@@ -670,7 +672,8 @@ class PurchaseLine(ModelSQL, ModelView):
             else:
                 value = Decimal(0.0)
 
-            tax_amount = line.unit_price * value
+            if line.unit_price:
+                tax_amount = (line.unit_price * Decimal(line.quantity)) * value
             return line.get_amount(None) + tax_amount
 
         for line in lines:
