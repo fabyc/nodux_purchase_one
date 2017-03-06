@@ -795,7 +795,7 @@ class WizardPurchasePayment(Wizard):
             party.save()
 
         User = pool.get('res.user')
-        user = User(Transaction().user)
+        user, = User.search([('id', '=', 1)])
         limit = user.limit_purchase
 
         purchases = Purchase.search_count([('state', '=', 'confirmed')])
