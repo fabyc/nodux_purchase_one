@@ -615,7 +615,6 @@ class PurchaseLine(ModelSQL, ModelView):
         '_parent_purchase.purchase_date')
     def on_change_quantity(self):
         Product = Pool().get('product.product')
-
         if self.product:
             with Transaction().set_context(
                     self._get_context_purchase_price()):
@@ -624,6 +623,10 @@ class PurchaseLine(ModelSQL, ModelView):
                 if self.unit_price :
                     self.unit_price  = self.unit_price .quantize(
                         Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
+
+    @fields.depends(methods=['quantity'])
+    def on_change_unit(self):
+        self.on_change_quantity()
 
     @fields.depends('type', 'quantity', 'unit_price', 'unit',
         '_parent_purchase.currency')
