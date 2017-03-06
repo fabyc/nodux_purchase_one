@@ -760,6 +760,7 @@ class WizardPurchasePayment(Wizard):
     def transition_pay_(self):
         pool = Pool()
         Date = pool.get('ir.date')
+        User = pool.get('res.user')
         Purchase = pool.get('purchase.purchase')
         Company = pool.get('company.company')
         active_id = Transaction().context.get('active_id', False)
@@ -781,8 +782,7 @@ class WizardPurchasePayment(Wizard):
             party.supplier = True
             party.save()
 
-        User = pool.get('res.user')
-        user = User(Transaction().user)
+        user, = User.search([('id', '=', 1)])
         limit = user.limit_purchase
 
         purchases = Purchase.search_count([('state', '=', 'confirmed')])
