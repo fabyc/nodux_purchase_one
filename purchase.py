@@ -635,6 +635,12 @@ class PurchaseLine(ModelSQL, ModelView):
                     Decimal(1) / 10 ** self.__class__.unit_price.digits[1])
         return res
 
+    @fields.depends('product', 'quantity', 'unit',
+        '_parent_purchase.currency', '_parent_purchase.party',
+        '_parent_purchase.purchase_date')
+    def on_change_unit(self):
+        return self.on_change_quantity()
+
     @fields.depends('type', 'quantity', 'unit_price', 'unit',
         '_parent_purchase.currency')
     def on_change_with_amount(self):
