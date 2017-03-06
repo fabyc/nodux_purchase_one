@@ -348,6 +348,8 @@ class Purchase(Workflow, ModelSQL, ModelView):
     @Workflow.transition('anulled')
     def anull(cls, purchases):
         for purchase in purchases:
+            cls.raise_user_warning('anull%s' % purchase.reference,
+                   'Esta seguro de anular la compra: "%s"', (purchase.reference))
             for line in purchase.lines:
                 product = line.product.template
                 if product.type == "goods":
