@@ -378,7 +378,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 product = line.product.template
                 if product.type == "goods":
                     if line.product.template.total == None:
-                        product.total = line.quantity
+                        product.total = Decimal(line.quantity)
                     else:
                         product.total = Decimal(line.product.template.total) + Decimal(line.quantity)
                 product.cost_price = line.unit_price

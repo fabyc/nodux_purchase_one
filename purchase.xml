@@ -159,5 +159,36 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="action" ref="act_purchase_relate_form"/>
         </record>
 
+      <!--PERMISOS -->
+        <record model="res.group" id="group_purchase">
+            <field name="name">Nodux - Compras</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_purchase">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+
+        <record model="res.user-res.group" id="user_trigger_group_purchase">
+            <field name="user" ref="res.user_trigger"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+
+        <record model="ir.ui.menu-res.group" id="menu_purchase_group_purchase">
+            <field name="menu" ref="menu_purchase"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_purchase_group_purchase_pos">
+            <field name="menu" ref="menu_purchase_pos"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_purchase_group_purchase_report">
+            <field name="menu" ref="menu_purchase_report"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+        <record model="ir.ui.menu-res.group" id="menu_purchase_group_purchase_payable">
+            <field name="menu" ref="menu_payable_form"/>
+            <field name="group" ref="group_purchase"/>
+        </record>
+
     </data>
 </tryton>
