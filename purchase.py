@@ -382,7 +382,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                     if line.product.template.total == None:
                         product.total = line.quantity
                     else:
-                        product.total = line.product.template.total + line.quantity
+                        product.total = line.product.template.total + Decimal(line.quantity)
                 product.cost_price = line.unit_price
                 product.save()
 
@@ -817,7 +817,7 @@ class WizardPurchasePayment(Wizard):
                     if line.product.template.total == None:
                         product.total = line.quantity
                     else:
-                        product.total = line.product.template.total + line.quantity
+                        product.total = line.product.template.total + Decimal(line.quantity)
                 product.cost_price = line.unit_price
                 product.save()
 
