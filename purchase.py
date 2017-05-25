@@ -144,6 +144,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                 ('draft', 'confirmed'),
                 ('draft', 'done'),
                 ('confirmed', 'done'),
+                ('confirmed', 'anulled'),
                 ('done', 'anulled'),
                 ))
 
@@ -157,7 +158,7 @@ class Purchase(Workflow, ModelSQL, ModelView):
                     'readonly': ~Eval('lines', []),
                     },
                 'anull': {
-                    'invisible': (Eval('state').in_(['draft', 'anulled', 'confirm'])),
+                    'invisible': (Eval('state').in_(['draft', 'anulled'])),
                     'readonly': Not(Bool(Eval('lines'))),
                     },
 
